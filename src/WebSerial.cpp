@@ -66,24 +66,26 @@ size_t WebSerialClass::write(const uint8_t *buffer, size_t size)
 size_t WebSerialClass::Try_Send_Buffer()
 {
     size_t Retorno = 0;
-    if (_ws->availableForWriteAll() == true)
+    if (_ws->count() > 0)
     {
-        AsyncWebSocket::AsyncWebSocketClientLinkedList Clientes = _ws->getClients();
-        size_t Maior_Fila_Cliente = 0;
-        
-        for (const auto &c : Clientes)
+        if (_ws->availableForWriteAll() == true)
         {
-            if (c->queueLength() > Maior_Fila_Cliente)
+            size_t Maior_Fila_Cliente = 0;
+            AsyncWebSocket::AsyncWebSocketClientLinkedList Clientes = _ws->getClients();
+            for (const auto &c : Clientes)
             {
-                Maior_Fila_Cliente = c->queueLength();
+                if (c->queueLength() > Maior_Fila_Cliente)
+                {
+                    Maior_Fila_Cliente = c->queueLength();
+                }
             }
-        }
 
-        if (Maior_Fila_Cliente <= 1)
-        {
-            _ws->textAll(Buffer);
-            Retorno = Buffer.length();
-            Buffer = "";
+            if (Maior_Fila_Cliente <= 1)
+            {
+                _ws->textAll(Buffer);
+                Retorno = Buffer.length();
+                Buffer = "";
+            }
         }
     }
     return Retorno;

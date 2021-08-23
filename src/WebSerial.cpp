@@ -43,25 +43,25 @@ void WebSerialClass::msgCallback(RecvMsgHandler _recv){
 
 size_t WebSerialClass::write(uint8_t character)
 {
-    _ws->textAll(String(m));
+    _ws->textAll(String(character));
     return 1;
 }
 
 size_t WebSerialClass::write(const char *str)
 {
-    uint16_t = Contador = 0;
+    uint16_t Contador = 0;
     while(*str)
     {
         Contador++;
         str++;
     }
-    _ws->textAll(m);
+    _ws->textAll(str);
     return Contador;
 }
 
 size_t WebSerialClass::write(const uint8_t *buffer, size_t size)
 {
-    _ws->textAll(buffer, size);
+    _ws->textAll((const char *) buffer, size);
     return size;
 }
 

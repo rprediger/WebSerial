@@ -49,14 +49,8 @@ size_t WebSerialClass::write(uint8_t character)
 
 size_t WebSerialClass::write(const char *str)
 {
-    uint16_t Contador = 0;
-    while(*str)
-    {
-        Contador++;
-        str++;
-    }
     _ws->textAll(str);
-    return Contador;
+    return strlen(str);
 }
 
 size_t WebSerialClass::write(const uint8_t *buffer, size_t size)

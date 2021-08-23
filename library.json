@@ -5,7 +5,7 @@
   "repository":
   {
     "type": "git",
-    "url": "https://github.com/ayushsharma82/WebSerial.git"
+    "url": "https://github.com/rprediger/WebSerial.git"
   },
   "authors":
   [
@@ -13,6 +13,11 @@
       "name": "Ayush Sharma",
       "email": "asrocks5@gmail.com",
       "maintainer": true
+    }, 
+    {
+        "name": "Ricardo Prediger",
+        "email": "ricardoprediger@gmail.com",
+        "maintainer": false
     }
   ],
   "version": "1.2.0",

@@ -73,9 +73,9 @@ size_t WebSerialClass::Try_Send_Buffer()
         
         for (const auto &c : Clientes)
         {
-            if (c->getQueueLength() > Maior_Fila_Cliente)
+            if (c->queueLength() > Maior_Fila_Cliente)
             {
-                Maior_Fila_Cliente = c->getQueueLength();
+                Maior_Fila_Cliente = c->queueLength();
             }
         }
 

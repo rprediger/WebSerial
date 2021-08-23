@@ -1,6 +1,5 @@
 #include "WebSerial.h"
 
-
 void WebSerialClass::begin(AsyncWebServer *server, const char* url){
     _server = server;
     _ws = new AsyncWebSocket("/webserialws");
@@ -14,15 +13,15 @@ void WebSerialClass::begin(AsyncWebServer *server, const char* url){
 
     _ws->onEvent([&](AsyncWebSocket * server, AsyncWebSocketClient * client, AwsEventType type, void * arg, uint8_t *data, size_t len) -> void {
         if(type == WS_EVT_CONNECT){
-            #if defined(DEBUG)
+            #if defined(WEBSERIAL_DEBUG)
                 DEBUG_WEB_SERIAL("Client connection received");
             #endif
         } else if(type == WS_EVT_DISCONNECT){
-            #if defined(DEBUG)
+            #if defined(WEBSERIAL_DEBUG)
                 DEBUG_WEB_SERIAL("Client disconnected");
             #endif
         } else if(type == WS_EVT_DATA){
-            #if defined(DEBUG)
+            #if defined(WEBSERIAL_DEBUG)
                 DEBUG_WEB_SERIAL("Received Websocket Data");
             #endif
             if(_RecvFunc != NULL){
@@ -81,7 +80,6 @@ void WebSerialClass::print(float m){
 
 
 // Print with New Line
-
 void WebSerialClass::println(String m){
     _ws->textAll(m+"\n");        
 }

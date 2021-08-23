@@ -41,6 +41,31 @@ void WebSerialClass::msgCallback(RecvMsgHandler _recv){
     _RecvFunc = _recv;
 }
 
+size_t WebSerialClass::write(uint8_t character)
+{
+    _ws->textAll(String(m));
+    return 1;
+}
+
+size_t WebSerialClass::write(const char *str)
+{
+    uint16_t = Contador = 0;
+    while(*str)
+    {
+        Contador++;
+        str++;
+    }
+    _ws->textAll(m);
+    return Contador;
+}
+
+size_t WebSerialClass::write(const uint8_t *buffer, size_t size)
+{
+    _ws->textAll(buffer, size);
+    return size;
+}
+
+/*
 // Print
 void WebSerialClass::print(String m){
     _ws->textAll(m);
@@ -115,7 +140,7 @@ void WebSerialClass::println(float m){
 void WebSerialClass::println(double m){
     _ws->textAll(String(m)+"\n");
 }
-
+*/
 #if defined(WEBSERIAL_DEBUG)
     void WebSerialClass::DEBUG_WEB_SERIAL(const char* message){
         Serial.println("[WebSerial] "+message);

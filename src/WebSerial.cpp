@@ -32,6 +32,8 @@ void WebSerialClass::begin(AsyncWebServer *server, const char* url){
 
     _server->addHandler(_ws);
 
+    Buffer = "";
+
     #if defined(WEBSERIAL_DEBUG)
         DEBUG_WEB_SERIAL("Attached AsyncWebServer along with Websockets");
     #endif
@@ -43,98 +45,55 @@ void WebSerialClass::msgCallback(RecvMsgHandler _recv){
 
 size_t WebSerialClass::write(uint8_t character)
 {
-    _ws->textAll(String(character));
-    return 1;
+    return this->write(&character, 1);
 }
 
 size_t WebSerialClass::write(const char *str)
 {
-    _ws->textAll(str);
-    return strlen(str);
+    return this->write((const uint8_t *) str, strlen(str));
 }
 
 size_t WebSerialClass::write(const uint8_t *buffer, size_t size)
 {
-    _ws->textAll((const char *) buffer, size);
+    for (uint16_t Contador = 0; Contador < size; Contador++)
+    {    
+        Buffer += (char)buffer[Contador];
+    }
+
     return size;
 }
 
-/*
-// Print
-void WebSerialClass::print(String m){
-    _ws->textAll(m);
+size_t WebSerialClass::Try_Send_Buffer()
+{
+    size_t Retorno = 0;
+    if (_ws->availableForWriteAll() == true)
+    {
+        AsyncWebSocket::AsyncWebSocketClientLinkedList Clientes = _ws->getClients();
+        size_t Maior_Fila_Cliente = 0;
+        
+        for (const auto &c : Clientes)
+        {
+            if (c->getQueueLength() > Maior_Fila_Cliente)
+            {
+                Maior_Fila_Cliente = c->getQueueLength();
+            }
+        }
+
+        if (Maior_Fila_Cliente <= 1)
+        {
+            _ws->textAll(Buffer);
+            Retorno = Buffer.length();
+            Buffer = "";
+        }
+    }
+    return Retorno;
 }
 
-void WebSerialClass::print(const char *m){
-    _ws->textAll(m);
+void WebSerialClass::Loop()
+{
+    Try_Send_Buffer();
 }
 
-void WebSerialClass::print(char *m){
-    _ws->textAll(m);
-}
-
-void WebSerialClass::print(int m){
-    _ws->textAll(String(m));
-}
-
-void WebSerialClass::print(uint8_t m){
-    _ws->textAll(String(m));
-}
-
-void WebSerialClass::print(uint16_t m){
-    _ws->textAll(String(m));
-}
-
-void WebSerialClass::print(uint32_t m){
-    _ws->textAll(String(m));
-}
-
-void WebSerialClass::print(double m){
-    _ws->textAll(String(m));
-}
-
-void WebSerialClass::print(float m){
-    _ws->textAll(String(m));
-}
-
-
-// Print with New Line
-void WebSerialClass::println(String m){
-    _ws->textAll(m+"\n");        
-}
-
-void WebSerialClass::println(const char *m){
-    _ws->textAll(String(m)+"\n");
-}
-
-void WebSerialClass::println(char *m){
-    _ws->textAll(String(m)+"\n");
-}
-
-void WebSerialClass::println(int m){
-    _ws->textAll(String(m)+"\n");
-}
-
-void WebSerialClass::println(uint8_t m){
-    _ws->textAll(String(m)+"\n");
-}
-
-void WebSerialClass::println(uint16_t m){
-    _ws->textAll(String(m)+"\n");
-}
-
-void WebSerialClass::println(uint32_t m){
-    _ws->textAll(String(m)+"\n");
-}
-
-void WebSerialClass::println(float m){
-    _ws->textAll(String(m)+"\n");
-}
-
-void WebSerialClass::println(double m){
-    _ws->textAll(String(m)+"\n");
-}
-*/
 #if defined(WEBSERIAL_DEBUG)
     void WebSerialClass::DEBUG_WEB_SERIAL(const char* message){
         Serial.println("[WebSerial] "+message);

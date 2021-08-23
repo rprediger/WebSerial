@@ -28,41 +28,22 @@ class WebSerialClass : public Print{
 
 public:
     void begin(AsyncWebServer *server, const char* url = "/webserial");
-
     void msgCallback(RecvMsgHandler _recv);
-    
+
     size_t write(uint8_t character);
     virtual size_t write(const char *str);
     virtual size_t write(const uint8_t *buffer, size_t size);
-/*
-    // Print
-    void print(String m = "");
-    void print(const char *m);
-    void print(char *m);
-    void print(int m);
-    void print(uint8_t m);
-    void print(uint16_t m);
-    void print(uint32_t m);
-    void print(double m);
-    void print(float m);
+    
+    void Loop();
 
-
-    // Print with New Line
-    void println(String m = "");
-    void println(const char *m);
-    void println(char *m);
-    void println(int m);
-    void println(uint8_t m);
-    void println(uint16_t m);
-    void println(uint32_t m);
-    void println(float m);
-    void println(double m);
-*/
 private:
     AsyncWebServer *_server;
     AsyncWebSocket *_ws;
     RecvMsgHandler _RecvFunc = NULL;
-    
+    String Buffer;
+
+    size_t Try_Send_Buffer();
+
     #if defined(WEBSERIAL_DEBUG)
         void DEBUG_WEB_SERIAL(const char* message);
     #endif
